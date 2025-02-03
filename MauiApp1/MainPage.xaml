@@ -5,27 +5,22 @@
              BackgroundColor="#1E1E1E">
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20">
-            <!-- Title -->
             <Label Text="Home"
                    FontSize="36"
                    FontAttributes="Bold"
                    TextColor="Lavender"
                    HorizontalOptions="Center" />
-
-            <!-- Phone Number Input Section -->
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" BackgroundColor="#262626"  Padding="10">
-                <!-- Country Selection with Flag -->
-                <Frame Grid.Column="0"
-                       CornerRadius="10"
-                       Padding="5"
-                       BackgroundColor="Purple">
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" BackgroundColor="#262626" Padding="10">
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 10"
+                        Stroke="Purple"
+                        BackgroundColor="Purple"
+                        Padding="5">
                     <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto">
-                        <Image x:Name="SelectedFlag" Source="uk.png" Grid.Column="0" Margin="5" />
+                        <Image x:Name="SelectedFlag" Source="uk.png" Grid.Column="0" Margin="5" WidthRequest="30" HeightRequest="20"/>
                         <Button x:Name="CountryButton" Text="▼" FontSize="Small" Clicked="OnCountryButtonClicked" Grid.Column="1" TextColor="White" BackgroundColor="Transparent" />
                     </Grid>
-                </Frame>
-
-                <!-- Entry for entering phone number -->
+                </Border>
                 <Entry x:Name="PhoneNumberEntry"
                        Grid.Column="1"
                        Placeholder="Your number"
@@ -34,38 +29,32 @@
                        TextColor="White"
                        BackgroundColor="Transparent" />
             </Grid>
-
-            <!-- Searchable Country List (Initially Hidden) -->
-            <Frame x:Name="CountryListFrame"
-                   IsVisible="False"
-                   CornerRadius="12"
-                   BorderColor="LightGray"
-                   BackgroundColor="#1E1E1E"
-                   Padding="10">
-                <StackLayout>
+            <Border x:Name="CountryListBorder"
+                    IsVisible="False"
+                    Stroke="LightGray"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="#1E1E1E"
+                    Padding="10">
+                <VerticalStackLayout>
                     <Entry x:Name="SearchEntry" Placeholder="Search" TextChanged="OnSearchTextChanged" BackgroundColor="#262626" TextColor="White" />
-                    <CollectionView x:Name="CountryListView" ItemsSource="{Binding Countries}" SelectionChanged="OnCountrySelectionChanged">
+                    <CollectionView x:Name="CountryListView" ItemsSource="{Binding countries}" SelectionChanged="OnCountrySelectionChanged">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Grid ColumnDefinitions="Auto,*" Padding="10">
-                                    <Image Source="{Binding Flag}" Grid.Column="0" WidthRequest="30" HeightRequest="20" />
+                                <Grid ColumnDefinitions="Auto,*,Auto" Padding="10">
+                                    <Image Source="{Binding Alpha2, StringFormat='{0}.png'}" Grid.Column="0" WidthRequest="30" HeightRequest="20" />
                                     <Label Text="{Binding Name}" Grid.Column="1" TextColor="White" FontSize="16" />
-                                    <Label Text="{Binding Code}" Grid.Column="1" HorizontalOptions="End" TextColor="Gray" />
+                                    <Label Text="{Binding CallingCode}" Grid.Column="2" TextColor="Gray" HorizontalOptions="End" />
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                </StackLayout>
-            </Frame>
-
-            <!-- Validation Message -->
+                </VerticalStackLayout>
+            </Border>
             <Label x:Name="ValidationMessage"
                    TextColor="Red"
                    FontAttributes="Bold"
                    FontSize="14"
                    IsVisible="False" />
-
-            <!-- Counter Button -->
             <Button x:Name="CounterBtn"
                     Text="Click me"
                     BackgroundColor="Purple"
