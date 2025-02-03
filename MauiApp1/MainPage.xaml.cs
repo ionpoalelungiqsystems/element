@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.RegularExpressions; // Add this line
+using System.Text.RegularExpressions;
 using Microsoft.Maui.Controls;
 using CountryData.Standard;
 
@@ -8,7 +8,7 @@ namespace MauiApp1
 {
     public partial class MainPage : ContentPage
     {
-        private ObservableCollection<Country> countries = new();
+        public ObservableCollection<Country> Countries { get; set; }
         private Country selectedCountry;
         private int count = 0;
 
@@ -16,59 +16,74 @@ namespace MauiApp1
         {
             InitializeComponent();
 
-            // Initialize country data using CountryData.Standard
             var countryHelper = new CountryHelper();
             var allCountries = countryHelper.GetCountries().ToList();
 
-            // Parse strings into custom Country model
-            countries = new ObservableCollection<Country>(
+            Countries = new ObservableCollection<Country>(
                 allCountries.Select(c =>
                 {
                     var parts = c.Split('|');
-                    if (parts.Length < 3) // Skip invalid entries
-                    {
-                        Console.WriteLine($"Skipping invalid country data: {c}");
-                        return null;
-                    }
-
+                    if (parts.Length < 3) return null;
                     return new Country
                     {
                         Name = parts[0],
                         CallingCode = "+" + parts[1],
                         Alpha2 = parts[2]
                     };
-                }).Where(c => c != null)! // Filter out null entries
+                }).Where(c => c != null)!
             );
 
-            // Ensure the collection is not empty
-            if (countries.Count == 0)
+            if (Countries.Count == 0)
             {
-                Console.WriteLine("No valid countries were loaded. Using default data.");
-
-                countries = new ObservableCollection<Country>
-                {
-                    new Country { Name = "United States", CallingCode = "+1", Alpha2 = "US" },
-                    new Country { Name = "United Kingdom", CallingCode = "+44", Alpha2 = "GB" },
-                    new Country { Name = "Canada", CallingCode = "+1", Alpha2 = "CA" },
-                    new Country { Name = "Germany", CallingCode = "+49", Alpha2 = "DE" },
-                    new Country { Name = "France", CallingCode = "+33", Alpha2 = "FR" },
-                    new Country { Name = "India", CallingCode = "+91", Alpha2 = "IN" },
-                    new Country { Name = "Japan", CallingCode = "+81", Alpha2 = "JP" }
-                };
+                Countries = new ObservableCollection<Country>
+{
+    new Country { Name = "Moldova", CallingCode = "+373", Alpha2 = "MD" },
+    new Country { Name = "United Kingdom", CallingCode = "+44", Alpha2 = "GB" },
+    new Country { Name = "Germany", CallingCode = "+49", Alpha2 = "DE" },
+    new Country { Name = "France", CallingCode = "+33", Alpha2 = "FR" },
+    new Country { Name = "United States", CallingCode = "+1", Alpha2 = "US" },
+    new Country { Name = "Canada", CallingCode = "+1", Alpha2 = "CA" },
+    new Country { Name = "India", CallingCode = "+91", Alpha2 = "IN" },
+    new Country { Name = "China", CallingCode = "+86", Alpha2 = "CN" },
+    new Country { Name = "Japan", CallingCode = "+81", Alpha2 = "JP" },
+    new Country { Name = "Brazil", CallingCode = "+55", Alpha2 = "BR" },
+    new Country { Name = "Australia", CallingCode = "+61", Alpha2 = "AU" },
+    new Country { Name = "Italy", CallingCode = "+39", Alpha2 = "IT" },
+    new Country { Name = "Spain", CallingCode = "+34", Alpha2 = "ES" },
+    new Country { Name = "Russia", CallingCode = "+7", Alpha2 = "RU" },
+    new Country { Name = "South Africa", CallingCode = "+27", Alpha2 = "ZA" },
+    new Country { Name = "Argentina", CallingCode = "+54", Alpha2 = "AR" },
+    new Country { Name = "Mexico", CallingCode = "+52", Alpha2 = "MX" },
+    new Country { Name = "Netherlands", CallingCode = "+31", Alpha2 = "NL" },
+    new Country { Name = "Sweden", CallingCode = "+46", Alpha2 = "SE" },
+    new Country { Name = "Switzerland", CallingCode = "+41", Alpha2 = "CH" },
+    new Country { Name = "Austria", CallingCode = "+43", Alpha2 = "AT" },
+    new Country { Name = "Belgium", CallingCode = "+32", Alpha2 = "BE" },
+    new Country { Name = "Denmark", CallingCode = "+45", Alpha2 = "DK" },
+    new Country { Name = "Finland", CallingCode = "+358", Alpha2 = "FI" },
+    new Country { Name = "Norway", CallingCode = "+47", Alpha2 = "NO" },
+    new Country { Name = "Poland", CallingCode = "+48", Alpha2 = "PL" },
+    new Country { Name = "Turkey", CallingCode = "+90", Alpha2 = "TR" }
+};
             }
 
             BindingContext = this;
 
-            // Select default country (GB) or first country in the list
-            selectedCountry = countries.FirstOrDefault(c => c.Alpha2 == "GB") ?? countries.First();
+            // Setăm Moldova ca țară implicită
+            selectedCountry = Countries.FirstOrDefault(c => c.Alpha2 == "MD") ?? Countries.First();
+            UpdateUI();
+        }
 
-            // Update UI with selected country's flag and calling code
+        private void UpdateUI()
+        {
+            Console.WriteLine($"Selected Country: {selectedCountry.Name} - {selectedCountry.CallingCode}");
             SelectedFlag.Source = $"{selectedCountry.Alpha2.ToLower()}.png";
             PhoneNumberEntry.Text = $"{selectedCountry.CallingCode} ";
         }
 
         private void OnCountryButtonClicked(object sender, EventArgs e)
         {
+            Console.WriteLine("Opening Country List");
             CountryListBorder.IsVisible = !CountryListBorder.IsVisible;
         }
 
@@ -76,8 +91,8 @@ namespace MauiApp1
         {
             string searchText = e.NewTextValue?.ToLower() ?? "";
             CountryListView.ItemsSource = string.IsNullOrEmpty(searchText)
-                ? countries
-                : countries.Where(c => c.Name.ToLower().Contains(searchText)).ToList();
+                ? Countries
+                : Countries.Where(c => c.Name.ToLower().Contains(searchText)).ToList();
         }
 
         private void OnCountrySelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -85,10 +100,9 @@ namespace MauiApp1
             if (e.CurrentSelection.FirstOrDefault() is Country country)
             {
                 selectedCountry = country;
-                SelectedFlag.Source = $"{selectedCountry.Alpha2.ToLower()}.png";
-                PhoneNumberEntry.Text = $"{selectedCountry.CallingCode} ";
+                UpdateUI();
                 CountryListBorder.IsVisible = false;
-                CountryListView.SelectedItem = null; // Clear selection
+                CountryListView.SelectedItem = null;
             }
         }
 
@@ -101,33 +115,30 @@ namespace MauiApp1
                 return;
             }
 
-            Regex regex = new(@"^\+?[0-9]{6,15}$");
-            if (!regex.IsMatch(phoneNumber))
-            {
-                ValidationMessage.Text = "Invalid phone number format.";
-                ValidationMessage.TextColor = Colors.Red;
-                ValidationMessage.IsVisible = true;
-                return;
-            }
-
-            ValidationMessage.Text = "Phone number is valid!";
-            ValidationMessage.TextColor = Colors.Green;
+            bool isValid = IsPhoneNumberValid(phoneNumber);
+            ValidationMessage.Text = isValid ? "Valid number!" : "Invalid phone number!";
+            ValidationMessage.TextColor = isValid ? Colors.Green : Colors.Red;
             ValidationMessage.IsVisible = true;
+        }
+
+        private bool IsPhoneNumberValid(string phoneNumber)
+        {
+            string countryCallingCode = selectedCountry.CallingCode.TrimStart('+');
+            Regex regex = new Regex(@"^\+?\d{6,15}$");
+            return regex.IsMatch(phoneNumber);
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
         {
             count++;
-            CounterBtn.Text = count == 1 ? "Clicked 1 time" : $"Clicked {count} times";
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            CounterBtn.Text = $"Clicked {count} times";
         }
     }
 
-    // Custom Country model
     public class Country
     {
-        public required string Name { get; set; } // Required property for country name
-        public required string CallingCode { get; set; } // Required property for calling code
-        public required string Alpha2 { get; set; } // Required property for Alpha2 code
+        public string Name { get; set; }
+        public string CallingCode { get; set; }
+        public string Alpha2 { get; set; }
     }
 }
