@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EBAD3AF7-86AA-48F7-8A9D-657D2E4044DC}|MauiApp1\\MauiApp1.csproj|c:\\users\\ion.poalelungi\\onedrive - qsystems srl\\documents\\github\\element\\mauiapp1\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EBAD3AF7-86AA-48F7-8A9D-657D2E4044DC}|MauiApp1\\MauiApp1.csproj|solutionrelative:mauiapp1\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EBAD3AF7-86AA-48F7-8A9D-657D2E4044DC}|MauiApp1\\MauiApp1.csproj|c:\\users\\ion.poalelungi\\onedrive - qsystems srl\\documents\\github\\element\\mauiapp1\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{EBAD3AF7-86AA-48F7-8A9D-657D2E4044DC}|MauiApp1\\MauiApp1.csproj|solutionrelative:mauiapp1\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBAD3AF7-86AA-48F7-8A9D-657D2E4044DC}|MauiApp1\\MauiApp1.csproj|c:\\users\\ion.poalelungi\\onedrive - qsystems srl\\documents\\github\\element\\mauiapp1\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBAD3AF7-86AA-48F7-8A9D-657D2E4044DC}|MauiApp1\\MauiApp1.csproj|solutionrelative:mauiapp1\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,17 +18,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "MainPage.xaml",
               "DocumentMoniker": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\MauiApp1\\MainPage.xaml",
               "RelativeDocumentMoniker": "MauiApp1\\MainPage.xaml",
-              "ToolTip": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\MauiApp1\\MainPage.xaml",
-              "RelativeToolTip": "MauiApp1\\MainPage.xaml",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAiwEQAAAAOAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\MauiApp1\\MainPage.xaml*",
+              "RelativeToolTip": "MauiApp1\\MainPage.xaml*",
+              "ViewState": "AgIAAHAAAAAAAAAAAAAAAJQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2025-02-03T15:12:24.664Z",
               "IsPinned": true,
@@ -36,13 +36,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "MainPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\MauiApp1\\MainPage.xaml.cs",
               "RelativeDocumentMoniker": "MauiApp1\\MainPage.xaml.cs",
-              "ToolTip": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\MauiApp1\\MainPage.xaml.cs",
-              "RelativeToolTip": "MauiApp1\\MainPage.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAQAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\ion.poalelungi\\OneDrive - QSystems SRL\\Documents\\GitHub\\element\\MauiApp1\\MainPage.xaml.cs*",
+              "RelativeToolTip": "MauiApp1\\MainPage.xaml.cs*",
+              "ViewState": "AgIAACEAAAAAAAAAAAAiwEgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-03T15:12:39.746Z",
               "IsPinned": true,
