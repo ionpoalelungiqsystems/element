@@ -10,8 +10,41 @@ namespace MauiApp1
     {
         private ObservableCollection<Country> _allCountries = new();
         private ObservableCollection<Country> _filteredCountries = new();
-        private Country _selectedCountry;
+        private Country? _selectedCountry;
         private readonly CountryHelper _countryHelper;
+        private bool _isInitialized;
+
+        public static readonly BindableProperty SelectedCountryProperty =
+            BindableProperty.Create(nameof(SelectedCountry), typeof(Country), typeof(CountryPhoneEntry), null, BindingMode.TwoWay);
+
+        public Country SelectedCountry
+        {
+            get => (Country?)GetValue(SelectedCountryProperty);
+            set
+            {
+                SetValue(SelectedCountryProperty, value);
+                _selectedCountry = value;
+                UpdateUI();
+            }
+        }
+
+        public static readonly BindableProperty PhoneNumberProperty =
+            BindableProperty.Create(nameof(PhoneNumber), typeof(string), typeof(CountryPhoneEntry), string.Empty, BindingMode.TwoWay);
+
+        public string PhoneNumber
+        {
+            get => (string)GetValue(PhoneNumberProperty);
+            set => SetValue(PhoneNumberProperty, value);
+        }
+
+        public static readonly BindableProperty IsPopupVisibleProperty =
+            BindableProperty.Create(nameof(IsPopupVisible), typeof(bool), typeof(CountryPhoneEntry), false, BindingMode.TwoWay);
+
+        public bool IsPopupVisible
+        {
+            get => (bool)GetValue(IsPopupVisibleProperty);
+            set => SetValue(IsPopupVisibleProperty, value);
+        }
 
         public ObservableCollection<Country> FilteredCountries
         {
@@ -27,8 +60,19 @@ namespace MauiApp1
         {
             InitializeComponent();
             _countryHelper = new CountryHelper();
-            InitializeCountries();
             BindingContext = this;
+
+            // Handle layout changes after the view is loaded
+            Loaded += OnViewLoaded;
+        }
+
+        private void OnViewLoaded(object sender, EventArgs e)
+        {
+            if (!_isInitialized)
+            {
+                InitializeCountries();
+                _isInitialized = true;
+            }
         }
 
         private void InitializeCountries()
@@ -47,19 +91,41 @@ namespace MauiApp1
             }));
 
             FilteredCountries = new ObservableCollection<Country>(_allCountries);
-            _selectedCountry = _allCountries.FirstOrDefault(c => c.Alpha2 == "us") ?? _allCountries.First();
+            SelectedCountry = _allCountries.FirstOrDefault(c => c.Alpha2 == "us") ?? _allCountries.First();
             UpdateUI();
         }
 
         private void OnCountryButtonClicked(object sender, EventArgs e)
         {
-            CountryListBorder.IsVisible = !CountryListBorder.IsVisible;
-            if (CountryListBorder.IsVisible)
+            IsPopupVisible = !IsPopupVisible;
+            if (IsPopupVisible)
             {
                 SearchEntry.Text = string.Empty;
                 FilteredCountries = new ObservableCollection<Country>(_allCountries);
                 SearchEntry.Focus();
+
+                // Position the dropdown frame
+                PositionDropdown();
             }
+        }
+
+        private void PositionDropdown()
+        {
+            if (MainInputFrame != null && CountryDropdownFrame != null && DropdownContent != null)
+            {
+                // Set the dropdown width to match the main input frame
+                CountryDropdownFrame.WidthRequest = MainInputFrame.Width;
+
+                // Position the dropdown directly under the main input
+                var dropdownMargin = CountryDropdownFrame.Margin;
+                dropdownMargin.Top = MainInputFrame.Height + 5; // 5px spacing
+                CountryDropdownFrame.Margin = dropdownMargin;
+            }
+        }
+
+        private void OnPopupBackgroundTapped(object sender, EventArgs e)
+        {
+            IsPopupVisible = false;
         }
 
         private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
@@ -81,19 +147,11 @@ namespace MauiApp1
             }
         }
 
-        private void OnCountryItemTapped(object sender, EventArgs e)
-        {
-            if (sender is Grid grid && grid.BindingContext is Country country)
-            {
-                SelectCountry(country);
-            }
-        }
-
         private void SelectCountry(Country country)
         {
             _selectedCountry = country;
             UpdateUI();
-            CountryListBorder.IsVisible = false;
+            IsPopupVisible = false;
             CountryListView.SelectedItem = null;
 
             // Preserve existing number if any, but update country code
@@ -127,11 +185,12 @@ namespace MauiApp1
 
         private void OnPhoneNumberTextChanged(object sender, TextChangedEventArgs e)
         {
+            if (_selectedCountry == null) return;
+
             if (string.IsNullOrEmpty(e.NewTextValue))
             {
                 PhoneNumberEntry.Text = _selectedCountry.CallingCode + " ";
                 PhoneNumberEntry.CursorPosition = PhoneNumberEntry.Text.Length;
-                ValidationMessage.IsVisible = false;
                 return;
             }
 
@@ -182,9 +241,8 @@ namespace MauiApp1
 
         private void ValidatePhoneNumber(string phoneNumber)
         {
-            if (string.IsNullOrWhiteSpace(phoneNumber))
+            if (string.IsNullOrWhiteSpace(phoneNumber) || _selectedCountry == null)
             {
-                ValidationMessage.IsVisible = false;
                 return;
             }
 
@@ -203,31 +261,23 @@ namespace MauiApp1
 
             if (nonSpaceChars.Length > 0)
             {
-                ValidationMessage.Text = "Only numbers are allowed";
-                ValidationMessage.TextColor = Colors.Red;
-                ValidationMessage.IsVisible = true;
+                // Handle validation error
                 return;
             }
 
             if (digitsOnly.Length < 6)
             {
-                ValidationMessage.Text = "Phone number must be at least 6 digits";
-                ValidationMessage.TextColor = Colors.Red;
-                ValidationMessage.IsVisible = true;
+                // Handle validation error
                 return;
             }
 
             if (digitsOnly.Length > 15)
             {
-                ValidationMessage.Text = "Phone number cannot exceed 15 digits";
-                ValidationMessage.TextColor = Colors.Red;
-                ValidationMessage.IsVisible = true;
+                // Handle validation error
                 return;
             }
 
-            ValidationMessage.Text = "Valid phone number";
-            ValidationMessage.TextColor = Colors.Green;
-            ValidationMessage.IsVisible = true;
+            // Valid phone number
         }
     }
 
